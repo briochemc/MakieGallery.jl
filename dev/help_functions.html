@@ -6,18 +6,23 @@ scatter&#40;x, y, z&#41;</code></pre>
 <h2>Theme</h2>
 <p>Available attributes and their defaults for <code>Scatter&#123;...&#125;</code> are: </p>
 <pre><code>  alpha             1.0
+  ambient           Float32&#91;0.55, 0.55, 0.55&#93;
   color             :black
   colormap          :viridis
   colorrange        AbstractPlotting.Automatic&#40;&#41;
+  diffuse           Float32&#91;0.4, 0.4, 0.4&#93;
   distancefield     &quot;nothing&quot;
   glowcolor         RGBA&#123;N0f8&#125;&#40;0.0,0.0,0.0,0.0&#41;
   glowwidth         0.0
+  lightposition     :eyeposition
   linewidth         1
   marker            GeometryTypes.HyperSphere&#123;2,T&#125; where T
   marker_offset     AbstractPlotting.Automatic&#40;&#41;
   markersize        0.1
   overdraw          false
   rotations         Billboard&#40;&#41;
+  shininess         32.0f0
+  specular          Float32&#91;0.2, 0.2, 0.2&#93;
   strokecolor       RGBA&#123;N0f8&#125;&#40;0.0,0.0,0.0,0.0&#41;
   strokewidth       0.0
   transform_marker  false
@@ -31,18 +36,23 @@ scatter&#40;x, y, z&#41;</code></pre>
 <p>Please refer to <a href="@ref"><code>convert_arguments</code></a> to find the full list of accepted arguments</p>
 <p>Available attributes and their defaults for <code>Scatter&#123;...&#125;</code> are: </p>
 <pre><code>  alpha             1.0
+  ambient           Float32&#91;0.55, 0.55, 0.55&#93;
   color             :black
   colormap          :viridis
   colorrange        AbstractPlotting.Automatic&#40;&#41;
+  diffuse           Float32&#91;0.4, 0.4, 0.4&#93;
   distancefield     &quot;nothing&quot;
   glowcolor         RGBA&#123;N0f8&#125;&#40;0.0,0.0,0.0,0.0&#41;
   glowwidth         0.0
+  lightposition     :eyeposition
   linewidth         1
   marker            GeometryTypes.HyperSphere&#123;2,T&#125; where T
   marker_offset     AbstractPlotting.Automatic&#40;&#41;
   markersize        0.1
   overdraw          false
   rotations         Billboard&#40;&#41;
+  shininess         32.0f0
+  specular          Float32&#91;0.2, 0.2, 0.2&#93;
   strokecolor       RGBA&#123;N0f8&#125;&#40;0.0,0.0,0.0,0.0&#41;
   strokewidth       0.0
   transform_marker  false
@@ -52,7 +62,7 @@ scatter&#40;x, y, z&#41;</code></pre>
 <p>You can see usage examples of <code>scatter</code> by running:</p>
 <p><code>example_database&#40;scatter&#41;</code></p>
 </div><h2 id="help_arguments-1"><a class="docs-heading-anchor" href="#help_arguments-1"><code>help_arguments</code></a><a class="docs-heading-anchor-permalink" href="#help_arguments-1" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="AbstractPlotting.help_arguments" href="#AbstractPlotting.help_arguments"><code>AbstractPlotting.help_arguments</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">help_arguments([io], func)</code></pre><p>Returns a list of signatures for function <code>func</code>.</p></div></section></article><p>Example usage:</p><pre><code class="language-julia">help_arguments(stdout, scatter)</code></pre><pre><code class="language-none">┌ Warning: argument help isn&#39;t currently implemented correctly
-└ @ AbstractPlotting ~/.julia/packages/AbstractPlotting/6YYZg/src/documentation/documentation.jl:63
+└ @ AbstractPlotting ~/.julia/packages/AbstractPlotting/Ia3q2/src/documentation/documentation.jl:63
 `scatter` has the following function signatures:
 
 ```
@@ -82,18 +92,23 @@ scatter&#40;x, y, z&#41;</code></pre>
 
 ```
   alpha             1.0
+  ambient           Float32[0.55, 0.55, 0.55]
   color             :black
   colormap          :viridis
   colorrange        AbstractPlotting.Automatic()
+  diffuse           Float32[0.4, 0.4, 0.4]
   distancefield     &quot;nothing&quot;
   glowcolor         RGBA{N0f8}(0.0,0.0,0.0,0.0)
   glowwidth         0.0
+  lightposition     :eyeposition
   linewidth         1
   marker            GeometryTypes.HyperSphere{2,T} where T
   marker_offset     AbstractPlotting.Automatic()
   markersize        0.1
   overdraw          false
   rotations         Billboard()
+  shininess         32.0f0
+  specular          Float32[0.2, 0.2, 0.2]
   strokecolor       RGBA{N0f8}(0.0,0.0,0.0,0.0)
   strokewidth       0.0
   transform_marker  false
@@ -217,4 +232,4 @@ scatter&#40;x, y, z&#41;</code></pre>
     thermal
     topo
     turbid
-    viridis</code></pre><p>For other plot attributes and their usage, see the section <a href="plot-attributes.html#Plot-attributes-1">Plot attributes</a>.</p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 14 March 2020 05:25">Saturday 14 March 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    viridis</code></pre><p>For other plot attributes and their usage, see the section <a href="plot-attributes.html#Plot-attributes-1">Plot attributes</a>.</p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 21 March 2020 03:47">Saturday 21 March 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
