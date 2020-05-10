@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>- · Makie.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/syntaxtheme.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../index.html"><img src="../assets/logo.png" alt="Makie.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">Makie.jl</span></div><form class="docs-search" action="../search.html"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../index.html">Home</a></li><li><span class="tocitem">Basics</span><ul><li><a class="tocitem" href="../basic-tutorials.html">Tutorial</a></li><li><a class="tocitem" href="../statsmakie.html">StatsMakie Tutorial</a></li><li><a class="tocitem" href="../animation.html">Animation</a></li><li><a class="tocitem" href="../interaction.html">Interaction</a></li><li><a class="tocitem" href="../functions-overview.html">Plotting functions overview</a></li><li><a class="tocitem" href="../animation.html">Animation</a></li></ul></li><li><span class="tocitem">Documentation</span><ul><li><a class="tocitem" href="../scenes.html">Scenes</a></li><li><a class="tocitem" href="../axis.html">Axis</a></li><li><a class="tocitem" href="../convenience.html">Convenience functions</a></li><li><a class="tocitem" href="../signatures.html">Plot function signatures</a></li><li><a class="tocitem" href="../plot-attributes.html">Plot attributes</a></li><li><a class="tocitem" href="../generated/colors.html">Colors</a></li><li><a class="tocitem" href="../theming.html">Config file</a></li><li><a class="tocitem" href="../cameras.html">Cameras</a></li><li><a class="tocitem" href="../recipes.html">Plot Recipes</a></li><li><a class="tocitem" href="../output.html">Output</a></li><li><a class="tocitem" href="../backends.html">Backends</a></li><li><a class="tocitem" href="../troubleshooting.html">Troubleshooting</a></li></ul></li><li><span class="tocitem">Developer Documentation</span><ul><li><a class="tocitem" href="../why-makie.html">Why <code>Makie</code>?</a></li><li><a class="tocitem" href="../devdocs.html">Devdocs</a></li><li><a class="tocitem" href="../gallery.html">MakieGallery</a></li><li><a class="tocitem" href="../abstractplotting_api.html">AbstractPlotting Reference</a></li><li><a class="tocitem" href="../typetrees.html">Type Trees</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="snake_tutorial.html">-</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="snake_tutorial.html">-</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaPlots/MakieGallery.jl/blob/master/docs/src/snake_tutorial/snake_tutorial.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><p>In this tutorial, we&#39;re going to build a small snake game in Makie. This is a good example to learn about Observables and the basic <code>Scene</code> and plotting workflow (even though a snake game is not a &quot;plot&quot;, it is sort of an interactive visualization).</p><p>This is how the game will look in the end:</p><p><video src="snake.mp4" controls="true" title="video"><a href="snake.mp4">video</a></video></p><h2 id="Observables"><a class="docs-heading-anchor" href="#Observables">Observables</a><a id="Observables-1"></a><a class="docs-heading-anchor-permalink" href="#Observables" title="Permalink"></a></h2><p>Makie&#39;s plotting system is built on <code>Observables.jl</code>. An <code>Observable</code> is just a container or wrapper for a value. In addition to that value, it also stores a list of functions, the listeners. Whenever the <code>Observable</code>&#39;s value is changed, the listeners are called in the order they were registered in, with the new value as an argument. A change in one <code>Observable</code> can trigger a whole chain reaction of other changes, if its listeners update other <code>Observable</code>s in turn. So it lends itself to building causal chains. If A changes, B changes as well. C depends on B, therefore C changes if A changes. Or in a specific example, if a slider A changes its value, this changes the result B of a computation depending on that value, which in turn updates a line plot C.</p><p>The nice thing about the <code>Observable</code> system is therefore that updating a plot is very simple. In most cases you just change the <code>Observable</code> containing the plotted value and the backend handles everything for you including updating buffers on the GPU (if you use <code>GLMakie</code>, the default GPU based backend).</p><p>Most plotting functions in Makie take either <code>Observable</code>s or normal objects as inputs, and react to changes to the <code>Observable</code>s immediately. For our snake game, we should therefore think about the chain of elements that determine the game logic and visualization, and decide what observables we need based on that.</p><p>Speaking of &quot;chain&quot;, that is not quite the correct term, as a chain is a sequence of links, while one <code>Observable</code> can both listen to or be triggered by multiple other <code>Observables</code>, as well as trigger multiple other <code>Observable</code>s itself. Therefore, the causal effects of one <code>Observable</code> can kind of &quot;fan out&quot; and get quite complex. (You can even create circular dependencies, although you will probably get a nice stack overflow error if you do that, so beware...)</p><h2 id="Basic-game-components"><a class="docs-heading-anchor" href="#Basic-game-components">Basic game components</a><a id="Basic-game-components-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-game-components" title="Permalink"></a></h2><p>So let&#39;s think about what elements our game has and how they are causally connected. There is the playing field, which consists of a number of square cells. There is the snake, which consists of a sequence of adjacent cells. Then there is the food item, which occupies one cell. And a score, that counts the number of links in the snake, or items that have been eaten so far.</p><p>How are these parts causally connected? A change in the playing field doesn&#39;t change the snake, a change in the snake doesn&#39;t change the food item, and the position of the food item neither changes the snake nor the playing field. But the score changes when the length of the snake changes, so there we have our first causal connection. Let&#39;s make the actual observables. By the way, in Makie they are called <code>Node</code>s, although they&#39;re identical to <code>Observable</code>s.</p><p>Let&#39;s start with the snake. We just store a vector of integer positions that denote which cells are occupied. We&#39;ll worry about the rectangles on the screen later. We also decide that the playing field is always supposed to be square, so we only store the number of cells along one side.</p><pre><code class="language-julia">using Makie
+
+
+cells_per_side = Node(15)
+snakecells = Node([Point(8, 8)]) # place the first cell in the middle</code></pre><p>The food position is just one cell, or one point. We hardcode the start position for simplicity.</p><pre><code class="language-julia">foodcell = Node(Point(4, 5))</code></pre><p>Now, for the score, we can make our first chained observable. The score is the length of the snake, so we specify it exactly like that.</p><pre><code class="language-julia">score = lift(length, snakecells)</code></pre><p>The function <code>lift</code> takes a function as the first argument and any number of observables after. The function is evaluated once with the current observable values and the result stored in another observable, which is then returned. Whenever one of the input observables changes, it updates the returned new observable. We can check out what the score is:</p><pre><code class="language-none">julia&gt; score
+Observable{Int64} with 0 listeners. Value:
+1</code></pre><p>The type parameter of the observable is set to the type of the first evaluated value, if you want to set it yourself, you can pass it with the <code>typ</code> keyword argument to <code>lift</code>. Sometimes that is useful if you want to allow more types than the one of the first value.</p><h2 id="The-Scene"><a class="docs-heading-anchor" href="#The-Scene">The Scene</a><a id="The-Scene-1"></a><a class="docs-heading-anchor-permalink" href="#The-Scene" title="Permalink"></a></h2><p>So far this hasn&#39;t been too exciting, we actually want to show things on the screen. Let&#39;s create our first <code>Scene</code>. In Makie, a visualization consists of one main <code>Scene</code>, in which plot objects or child <code>Scene</code>s can be placed. There is a small list of primitive visual objects like <code>Lines</code>, <code>Scatter</code>, <code>Heatmap</code> or <code>Text</code>, and then there are more complex ones that are combinations of the primitives (a <code>Poly</code> for example is a <code>Mesh</code> bundled together with a <code>Wireframe</code>).</p><p>Creating a scene is very simple.</p><pre><code class="language-julia">scene = Scene(resolution = (800, 800), camera = campixel!, raw = true)</code></pre><p>You don&#39;t have to specify any keywords in general, but we want to start with a square resolution. Also, we want a specific <code>camera</code> for the <code>Scene</code>, which determines the projection with which plots are rendered. As we&#39;re making a pixel-perfect 2D game here, the <code>campixel!</code> function tells the <code>Scene</code> to interpret coordinates of our plot objects as pixel values. Setting <code>raw = true</code> means that we&#39;re disabling the automatic creation of an <code>Axis</code> when we add plot objects into the scene, as we&#39;re not actually &quot;plotting&quot; anything here. We&#39;re just using &quot;raw&quot; plot objects.</p><p>If you run only this line in the REPL, the scene will actually show up directly. If you run it as part of a script, it won&#39;t, unless you call <code>display(scene)</code>.</p><p>Now we need to specify the square playing field in which our snake action will happen. We could just hardcode it for our chosen scene resolution, but that would not be as much fun. Instead, we&#39;ll make it so the playing field adjusts to whatever scene resolution we set (for example when we drag and resize the window). Therefore, we&#39;ll <code>lift</code> the observable telling us about the <code>Scene</code>&#39;s current pixel area and return the coordinates of the largest square we can fit inside it. The <code>do</code> syntax comes in handy to create the anonymous function that calculates the rectangle.</p><pre><code class="language-julia">playingfield = lift(scene.px_area) do area
+    shorter_side = minimum(widths(area))
+    squareorigin = (widths(area) .- shorter_side) ./ 2
+    squarewidths = (shorter_side, shorter_side)
+    FRect2D(squareorigin, squarewidths)
+end</code></pre><p>Now we have the coordinates of a square playing field that fits nicely into whatever the current size of the scene is. Let&#39;s actually show this rectangle with our first plot object! We&#39;ll use the <code>poly!</code> function to add a <code>Poly</code> to the scene. One of its possible input argument options is a <code>Rect</code> like we just created, so it fits the bill.</p><pre><code class="language-julia">background = poly!(scene, playingfield, color = :gray)[end]</code></pre><p>The <code>[end]</code> is necessary to save the actual <code>Poly</code> object because all plotting functions with a <code>!</code> return the scene, not the plotting object. Indexing into the scene accesses the vector of plot objects and the last plotting function always creates the object at the <code>end</code>.</p><p>The <code>color</code> keyword sets the color <code>Attribute</code> of the <code>Poly</code> object with an <code>Observable</code> containing the value <code>:gray</code> that is automatically created for us. We could have chosen to pass an <code>Observable</code> we created ourselves, but in this case that we don&#39;t need to. All attributes of Makie plots are <code>Observable</code>s so that the plots can react to their changes.</p><p>Let&#39;s <code>display</code> the scene and resize the window to check that everything worked and our playing field is always square and centered.</p><p><video src="background.mp4" controls="true" title="video"><a href="background.mp4">video</a></video></p><h2 id="The-Snake"><a class="docs-heading-anchor" href="#The-Snake">The Snake</a><a id="The-Snake-1"></a><a class="docs-heading-anchor-permalink" href="#The-Snake" title="Permalink"></a></h2><p>Nice, now we can add the snake.</p><p>We have the snake stored as a vector of cell indices, but we want to display it as multiple squares. We can use <code>poly!</code> to draw a list of rectangles, so we need to create that observable with rectangles now.</p><pre><code class="language-julia">function cell_to_rect(playingfield, cells_per_side, cell)
+    sidelengths = widths(playingfield) ./ cells_per_side
+    origin = AbstractPlotting.origin(playingfield) .+ (cell .- (1, 1)) .* sidelengths
+    FRect2D(origin, sidelengths)
+end
+
+snakesquares = lift(playingfield, cells_per_side, snakecells) do playingfield, cells_per_side, snakecells
+    map(snakecells) do cell
+        cell_to_rect(playingfield, cells_per_side, cell)
+    end
+end</code></pre><p>Here we&#39;ve made <code>snakesquares</code> depend on the size of the playing field, the number of cells per side and the actual cells making up the snake. Whenever one of these changes, the snake visualization will as well, so they will never go out of sync. Pretty nifty!</p><p>Let&#39;s actually display the snake squares (for now it&#39;s just one anyway).</p><pre><code class="language-julia">poly!(scene, snakesquares, color = :green, strokewidth = 1, strokecolor = :white)</code></pre><p><img src="snake.png" alt="snake"/></p><h2 id="The-Food"><a class="docs-heading-anchor" href="#The-Food">The Food</a><a id="The-Food-1"></a><a class="docs-heading-anchor-permalink" href="#The-Food" title="Permalink"></a></h2><p>Now let&#39;s do the same logic for the food. We calculate the position of the food and the marker size dynamically, depending on the field size, the number of cells and the food cell. For the actual display we use the <code>scatter!</code> function because we want our snake to hunt something actually looking like snake food, a mouse.</p><pre><code class="language-julia">foodposition = lift(foodcell, cells_per_side, playingfield) do foodcell, cells_per_side, playingfield
+    sidelengths = widths(playingfield) ./ cells_per_side
+    foodpoint = AbstractPlotting.origin(playingfield) .+ (foodcell .- (0.5, 0.5)) .* sidelengths
+    # currently, the scatter function expects an array of points
+    [foodpoint]
+end
+
+scatter!(scene, foodposition, marker = &#39;🐭&#39;,
+    markersize = @lift((widths($playingfield) ./ $cells_per_side)[1]))</code></pre><p>The <code>markersize</code> is created with the <code>@lift</code> macro, which rewrites the expression in parentheses to a <code>lift</code> call where every variable with a <code>$</code> is treated as an observable. For expressions like this the macro can be shorter to write than the function.</p><p><img src="food.png" alt="food"/></p><h2 id="The-score"><a class="docs-heading-anchor" href="#The-score">The score</a><a id="The-score-1"></a><a class="docs-heading-anchor-permalink" href="#The-score" title="Permalink"></a></h2><p>The score is very simple, we just lift the <code>score</code> observable to create a score string and place that wherever the upper right corner of the playing field is.</p><pre><code class="language-julia">text!(scene, @lift(&quot;Score: $($score)&quot;),
+    position = @lift(maximum($playingfield) .- Point(20, 20)),
+    textsize = 30, align = (:right, :top), color = :white)</code></pre><p><img src="score.png" alt="score"/></p><h2 id="Keyboard-input"><a class="docs-heading-anchor" href="#Keyboard-input">Keyboard input</a><a id="Keyboard-input-1"></a><a class="docs-heading-anchor-permalink" href="#Keyboard-input" title="Permalink"></a></h2><p>For now, everything is still static. In order to play the game, we will need to react to the player pressing the arrow buttons. We can react to the <code>scene.events.keyboardbuttons</code> observable which fires every time a key is pressed. We don&#39;t another observable, a <code>Ref</code> keeping track of the last pressed direction is enough. In the snake game, the movement happens in fixed time intervals, not when the player presses a button. So we use <code>on</code> instead of <code>lift</code> as it doesn&#39;t create an observable. It simply calls the given function.</p><pre><code class="language-julia">lastdirection = Ref(:right)
+
+on(scene.events.keyboardbuttons) do but
+    if ispressed(but, Keyboard.left)
+        lastdirection[] = :left
+    elseif ispressed(but, Keyboard.up)
+        lastdirection[] = :up
+    elseif ispressed(but, Keyboard.down)
+        lastdirection[] = :down
+    elseif ispressed(but, Keyboard.right)
+        lastdirection[] = :right
+    end
+end</code></pre><h2 id="Game-logic"><a class="docs-heading-anchor" href="#Game-logic">Game logic</a><a id="Game-logic-1"></a><a class="docs-heading-anchor-permalink" href="#Game-logic" title="Permalink"></a></h2><p>The actual game logic is not so important here, so I&#39;ll just show it. The gist is that the snake is moved in the last direction by <code>circshift</code>ing the array of cells. The snake grows if its head lands on the food. In that case, a new food position is generated which cannot be on the snake. The function returns if the snake bites itself and is <code>:dead</code>, or if it has <code>:eaten</code> or is simply still <code>:alive</code>.</p><pre><code class="language-julia">function move_snake!(dir)
+    shift = Point(
+        dir == :left ? -1 : dir == :right ? 1 : 0,
+        dir == :down ? -1 : dir == :up ? 1 : 0)
+
+    tailpos = snakecells[][end]
+    new_headpos = mod.(snakecells[][1] .+ shift, Base.OneTo.(cells_per_side[]))
+
+    if new_headpos in snakecells[][1:end-1]
+        return :dead
+    end
+
+    # mutating the array in snakecells doesn&#39;t trigger the observable
+    snakecells[][end] = new_headpos
+    # but assigning snakecells a new value does
+    snakecells[] = circshift(snakecells[], 1)
+
+    if snakecells[][1] == foodcell[]
+        
+        push!(snakecells[], tailpos)
+        snakecells[] = snakecells[]
+
+        foodcell[] = let
+            while (p = Point2(rand(1:cells_per_side[]), rand(1:cells_per_side[]))) in snakecells[]
+            end
+            p
+        end
+
+        return :eaten
+    else
+        return :alive
+    end
+end</code></pre><p>Note that we are not doing anything specific with the visual part of the game here. That all happens automatically whenever <code>snakecells</code> or <code>foodcell</code> are changed, through the magic of observables.</p><h2 id="The-Game-Loop"><a class="docs-heading-anchor" href="#The-Game-Loop">The Game Loop</a><a id="The-Game-Loop-1"></a><a class="docs-heading-anchor-permalink" href="#The-Game-Loop" title="Permalink"></a></h2><p>The game is still not running, because we don&#39;t actually call <code>move_snake!</code> yet. Let&#39;s make a small loop that runs as long as the <code>scene</code> is open. At every interval we move the snake in the last recorded direction. We also increase the speed of the game a bit, every time a food item is eaten. And when the snake finally bites itself, we break out of the loop and color the background <code>:red</code>. Remember how we gave the background poly the attribute <code>color = :gray</code> in the beginning? Here we can see that it still reacts to a change of the attribute, even if we don&#39;t pass an observable ourselves.</p><pre><code class="language-julia">frames_per_second = Ref(5.0)
+
+while isopen(scene)
+    sleep(1/frames_per_second[])
+    state = move_snake!(lastdirection[])
+    if state == :eaten
+        frames_per_second[] += 0.2
+        score[] += 1
+    elseif state == :dead
+        background.color = :red
+        break
+    end
+end</code></pre><h2 id="Summary"><a class="docs-heading-anchor" href="#Summary">Summary</a><a id="Summary-1"></a><a class="docs-heading-anchor-permalink" href="#Summary" title="Permalink"></a></h2><p>That&#39;s it! Here&#39;s the full code of the game if you don&#39;t want to copy paste all the small parts. I hope you enjoyed it and feel equipped to handle more complex interactive visualizations with Makie!</p><pre><code class="language-julia">using Makie
+
+
+cells_per_side = Node(15)
+snakecells = Node([Point(8, 8)])
+foodcell = Node(Point(4, 5))
+score = lift(length, snakecells)
+
+scene = Scene(resolution = (800, 800), raw = true, camera = campixel!)
+
+playingfield = lift(scene.px_area) do area
+    w = minimum(widths(area))
+    origin = (widths(area) .- w) ./ 2
+    ws = (w, w)
+    FRect2D(origin, ws)
+end
+
+function cell_to_rect(playingfield, cells_per_side, cell)
+    sidelengths = widths(playingfield) ./ cells_per_side
+    origin = AbstractPlotting.origin(playingfield) .+ (cell .- (1, 1)) .* sidelengths
+    FRect2D(origin, sidelengths)
+end
+
+snakesquares = lift(playingfield, cells_per_side, snakecells) do playingfield, cells_per_side, snakecells
+    map(snakecells) do cell
+        cell_to_rect(playingfield, cells_per_side, cell)
+    end
+end
+
+foodposition = lift(foodcell, cells_per_side, playingfield) do foodcell, cells_per_side, playingfield
+    sidelengths = widths(playingfield) ./ cells_per_side
+    [AbstractPlotting.origin(playingfield) .+ (foodcell .- (0.5, 0.5)) .* sidelengths]
+end
+
+background = poly!(scene, playingfield, color = :gray)[end]
+
+poly!(scene, snakesquares, color = :green, strokewidth = 1, strokecolor = :white)
+
+scatter!(scene, foodposition, marker = &#39;🐭&#39;,
+    markersize = @lift((widths($playingfield) ./ $cells_per_side)[1]))
+
+text!(scene, @lift(&quot;Score: $($score)&quot;),
+    position = @lift(maximum($playingfield) .- Point(20, 20)),
+    textsize = 30, align = (:right, :top), color = :white)
+
+
+lastdirection = Ref(:right)
+
+on(scene.events.keyboardbuttons) do but
+    if ispressed(but, Keyboard.left)
+        lastdirection[] = :left
+    elseif ispressed(but, Keyboard.up)
+        lastdirection[] = :up
+    elseif ispressed(but, Keyboard.down)
+        lastdirection[] = :down
+    elseif ispressed(but, Keyboard.right)
+        lastdirection[] = :right
+    end
+end
+
+function move_snake!(dir)
+    shift = Point(
+        dir == :left ? -1 : dir == :right ? 1 : 0,
+        dir == :down ? -1 : dir == :up ? 1 : 0)
+
+    tailpos = snakecells[][end]
+    new_headpos = mod.(snakecells[][1] .+ shift, Base.OneTo.(cells_per_side[]))
+
+    if new_headpos in snakecells[][1:end-1]
+        return :dead
+    end
+
+    # mutating the array in snakecells doesn&#39;t trigger the observable
+    snakecells[][end] = new_headpos
+    # but assigning snakecells a new value does
+    snakecells[] = circshift(snakecells[], 1)
+
+    if snakecells[][1] == foodcell[]
+        push!(snakecells[], tailpos)
+        snakecells[] = snakecells[]
+
+        foodcell[] = let
+            while (p = Point2(rand(1:cells_per_side[]), rand(1:cells_per_side[]))) in snakecells[]
+            end
+            p
+        end
+
+        return :eaten
+    else
+        return :alive
+    end
+end
+
+display(scene)
+
+frames_per_second = Ref(5.0)
+
+while isopen(scene)
+    sleep(1/frames_per_second[])
+    state = move_snake!(lastdirection[])
+    if state == :eaten
+        frames_per_second[] += 0.2
+        score[] += 1
+    elseif state == :dead
+        background.color = :red
+        break
+    end
+end</code></pre></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 10 May 2020 12:42">Sunday 10 May 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
