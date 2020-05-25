@@ -17,6 +17,7 @@ scatter&#40;x, y, z&#41;</code></pre>
   marker            GeometryBasics.HyperSphere&#123;2,T&#125; where T
   marker_offset     AbstractPlotting.Automatic&#40;&#41;
   markersize        0.1
+  markerspace       AbstractPlotting.Automatic&#40;&#41;
   nan_color         RGBA&#123;Float32&#125;&#40;0.0f0,0.0f0,0.0f0,0.0f0&#41;
   overdraw          false
   rotations         Billboard&#40;&#41;
@@ -47,6 +48,7 @@ scatter&#40;x, y, z&#41;</code></pre>
   marker            GeometryBasics.HyperSphere&#123;2,T&#125; where T
   marker_offset     AbstractPlotting.Automatic&#40;&#41;
   markersize        0.1
+  markerspace       AbstractPlotting.Automatic&#40;&#41;
   nan_color         RGBA&#123;Float32&#125;&#40;0.0f0,0.0f0,0.0f0,0.0f0&#41;
   overdraw          false
   rotations         Billboard&#40;&#41;
@@ -62,7 +64,7 @@ scatter&#40;x, y, z&#41;</code></pre>
 <p>You can see usage examples of <code>scatter</code> by running:</p>
 <p><code>example_database&#40;scatter&#41;</code></p>
 </div><h2 id="help_arguments"><a class="docs-heading-anchor" href="#help_arguments"><code>help_arguments</code></a><a id="help_arguments-1"></a><a class="docs-heading-anchor-permalink" href="#help_arguments" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="AbstractPlotting.help_arguments" href="#AbstractPlotting.help_arguments"><code>AbstractPlotting.help_arguments</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">help_arguments([io], func)</code></pre><p>Returns a list of signatures for function <code>func</code>.</p></div></section></article><p>Example usage:</p><pre><code class="language-julia">help_arguments(stdout, scatter)</code></pre><pre><code class="language-none">┌ Warning: argument help isn&#39;t currently implemented correctly
-└ @ AbstractPlotting ~/.julia/packages/AbstractPlotting/xQNLw/src/documentation/documentation.jl:63
+└ @ AbstractPlotting ~/.julia/packages/AbstractPlotting/erm8R/src/documentation/documentation.jl:63
 `scatter` has the following function signatures:
 
 ```
@@ -70,25 +72,25 @@ scatter&#40;x, y, z&#41;</code></pre>
   (Vector, Vector, Vector)
   (Matrix)
 ```</code></pre><h2 id="help_attributes"><a class="docs-heading-anchor" href="#help_attributes"><code>help_attributes</code></a><a id="help_attributes-1"></a><a class="docs-heading-anchor-permalink" href="#help_attributes" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="AbstractPlotting.help_attributes" href="#AbstractPlotting.help_attributes"><code>AbstractPlotting.help_attributes</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">help_attributes([io], Union{PlotType, PlotFunction}; extended = false)</code></pre><p>Returns a list of attributes for the plot type <code>Typ</code>. The attributes returned extend those attributes found in the <code>default_theme</code>.</p><p>Use the optional keyword argument <code>extended</code> (default = <code>false</code>) to show in addition the default values of each attribute. usage:</p><pre><code class="language-example">&gt;help_attributes(scatter)
-	alpha
-	color
-	colormap
-	colorrange
-	distancefield
-	glowcolor
-	glowwidth
-	linewidth
-	marker
-	marker_offset
-	markersize
-	overdraw
-	rotations
-	strokecolor
-	strokewidth
-	transform_marker
-	transparency
-	uv_offset_width
-	visible</code></pre></div></section></article><p>Example usage:</p><pre><code class="language-julia">help_attributes(stdout, Scatter; extended = true)</code></pre><pre><code class="language-none">Available attributes and their defaults for `Scatter{...}` are:
+    alpha
+    color
+    colormap
+    colorrange
+    distancefield
+    glowcolor
+    glowwidth
+    linewidth
+    marker
+    marker_offset
+    markersize
+    overdraw
+    rotations
+    strokecolor
+    strokewidth
+    transform_marker
+    transparency
+    uv_offset_width
+    visible</code></pre></div></section></article><p>Example usage:</p><pre><code class="language-julia">help_attributes(stdout, Scatter; extended = true)</code></pre><pre><code class="language-none">Available attributes and their defaults for `Scatter{...}` are:
 
 ```
   ambient           Float32[0.55, 0.55, 0.55]
@@ -103,6 +105,7 @@ scatter&#40;x, y, z&#41;</code></pre>
   marker            GeometryBasics.HyperSphere{2,T} where T
   marker_offset     AbstractPlotting.Automatic()
   markersize        0.1
+  markerspace       AbstractPlotting.Automatic()
   nan_color         RGBA{Float32}(0.0f0,0.0f0,0.0f0,0.0f0)
   overdraw          false
   rotations         Billboard()
@@ -693,4 +696,4 @@ scatter&#40;x, y, z&#41;</code></pre>
     vikO
     viridis
     watermelon
-    winter</code></pre><p>For other plot attributes and their usage, see the section <a href="plot-attributes.html#Plot-attributes">Plot attributes</a>.</p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 21 May 2020 12:14">Thursday 21 May 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    winter</code></pre><p>For other plot attributes and their usage, see the section <a href="plot-attributes.html#Plot-attributes">Plot attributes</a>.</p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 25 May 2020 20:47">Monday 25 May 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
